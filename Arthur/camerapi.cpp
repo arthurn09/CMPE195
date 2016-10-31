@@ -106,7 +106,8 @@ void *master(void *ptr)
         if(distractedCount > 3)
         {
             //write distracted to data file
-            
+            int systemCmd;
+            systemCmd = system("python DistractedDriver.py");
             
             //reset count, no need
             distractedCount = 0;
