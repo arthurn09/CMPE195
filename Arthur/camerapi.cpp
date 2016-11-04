@@ -18,7 +18,7 @@ using namespace std;
 #define LANE_CHANGE_LOG		"lane_change.log"
 #define DISTRACTED_LOG		"distracted.log"
 #define TAILGATE_LOG		"tailgate.log"
-#define DATA_LOG			"data.log"
+#define SEND_DATA_LOG		"send_data.log"
 
 
 sem_t master_signal, driver_signal, dashboard_signal, communication_signal;
@@ -34,7 +34,7 @@ int main() {
     string lane_change_log = LANE_CHANGE_LOG; //Lane change file
     string distracted_log = DISTRACTED_LOG; //Distracted file
     string tailgate_log = TAILGATE_LOG; //License distance file
-    string data_log = DATA_LOG; //Communication file
+    string send_data_log = SEND_DATA_LOG; //Communication file
     
     pthread_t driver_thread, dashboard_thread, master_thread, communication_thread;
     
@@ -203,7 +203,7 @@ void *communication(void *ptr)
         sem_wait(&communication_signal);
         
         int systemCmd;
-        systemCmd = system("python communication.py");
+        systemCmd = system("python transferSend.py");
         
         //set semaphore for driver camera
         sem_post(&driver_signal);

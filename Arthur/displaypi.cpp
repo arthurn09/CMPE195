@@ -18,7 +18,7 @@ using namespace std;
 #define DISTRACTED_LOG				"distracted.log"
 #define TAILGATE_LOG				"tailgate.log"
 #define SPEED_LOG					"speed.log"
-#define DATA_LOG					"data.log"
+#define RECEIVE_DATA_LOG			"receive_data.log"
 
 sem_t master_signal, communication_signal, GPS_signal, display_signal;
 
@@ -33,7 +33,7 @@ int main() {
     string distracted_log = DISTRACTED_LOG; //Distacted file
     string tailgate_log = TAILGATE_LOG; //Distance of car in front
     string speed_log = SPEED_LOG; //Speed file
-    string data_log = DATA_LOG; //Communication file
+    string receive_data_log = RECEIEV_DATA_LOG; //Communication file
     
     pthread_t display_thread, master_thread, communication_thread, GPS_thead;
     
@@ -76,7 +76,7 @@ void *master(void *ptr)
         //Determine grade
         ifstream dataStream;
         string buffer;
-        dataStream.open("data.log");
+        dataStream.open("receive_data.log");
         while(getline(dataStream, buffer))
         {
             
@@ -99,7 +99,7 @@ void *communication(void *ptr)
         sem_wait(&communication_signal);
         
         int systemCmd;
-        systemCmd = system("python communicaiton.py");
+        systemCmd = system("python transferReceive.py");
         
         //send GPS signal
         sem_post(&GPS_signal);
