@@ -51,7 +51,7 @@ def showClock(clockScreen):
          number+=10 
 
 
-    with open('speed.txt', 'rU') as fp:
+    with open('"speed.txt",'r', os.O_NONBLOCK) as fp:
       for line in fp:
          line = line.rstrip('\n')
          label = speedfont.render(line,1,(255,255,0))
