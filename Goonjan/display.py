@@ -26,7 +26,9 @@ def showClock(clockScreen):
     pygame.draw.rect(screen, (255,0,0), [75, 350, 520, 120],2)
 
     myfont = pygame.font.SysFont("Courier", 15)
-
+    gradefont = pygame.font.SysFont("Courier",60)
+    speedfont = pygame.font.SysFont("Courier",70)
+    mphfont = pygame.font.SysFont("Courier",50)
 #Text
     label = myfont.render("Current Grade: ", 1, (255,255,0))
     screen.blit(label, (100, 10))
@@ -52,26 +54,24 @@ def showClock(clockScreen):
     with open('speed.txt', 'rU') as fp:
       for line in fp:
          line = line.rstrip('\n')
-         label = myfont.render(line,1,(255,255,0))
+         label = speedfont.render(line,1,(255,255,0))
          screen.blit(label, (500,70))
 
     with open('mph.txt', 'rU') as fp:
       for line in fp:
          line = line.rstrip('\n')
-         label = myfont.render(line,1,(255,255,0))
-         screen.blit(label, (320,70))
+         label = mphfont.render(line,1,(255,255,0))
+         screen.blit(label, (300,70))
 
 
     with open('grade.txt', 'rU') as fp:
       for line in fp:
          line = line.rstrip('\n')
-         label = myfont.render(line,1,(255,255,0))
-         screen.blit(label, (100,70))
+         label = gradefont.render(line,1,(255,255,0))
+         screen.blit(label, (130,70))
 
     pygame.init()
     pygame.font.init()
-    font = pygame.font.SysFont("Courier",10)
-  
  
    # Define some fonts to draw text with
     myfont = pygame.font.SysFont(None, 100)
@@ -85,7 +85,7 @@ def showClock(clockScreen):
     clocklabel = myfont.render(mytime, 1, (255,255,255))
     secondlabel = myfontsmall.render(mysecs, 1, (255,255,255))
    
-    # Screen
+    # And position them on the screen
     textpos = clocklabel.get_rect() # Gets the rectangle of the hours and minutes...
     textpos.centerx = clockScreen.get_rect().centerx # ...and center horizontally...
     textpos.centery = clockScreen.get_rect().centery # ...and vertically
@@ -112,9 +112,9 @@ while not quitloop:
         # Handle quit message received
         if event.type == pygame.QUIT:
             quitloop = True
-   
-    # Update
+       
     if pygame.time.get_ticks() > refresh:
-
-        showClock(screen)
+       
+        # Run the function to update display     
+        	showClock(screen) 
 
