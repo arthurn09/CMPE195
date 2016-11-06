@@ -24,13 +24,14 @@ using namespace std;
 #define SPEED_LOG					"speed.log"
 #define RECEIVE_DATA_TXT			"receive_data.txt"
 
-sem_t master_signal, communication_signal, topspeed_signal;
+sem_t master_signal, communication_signal, topspeed_signal, tailgate_signal;
 
 void *display(void *ptr);
 void *master(void *ptr);
 void *communication(void *ptr);
 void *GPS(void *ptr);
 void *topSpeed(void *ptr);
+void *tailgate(void *ptr);
 
 int main() {
     
@@ -40,13 +41,16 @@ int main() {
     string speed_log = SPEED_LOG; //Speed file
     string receive_data_txt = RECEIVE_DATA_TXT; //Communication file
     
-    pthread_t display_thread, master_thread, communication_thread, GPS_thead;
+    pthread_t display_thread, master_thread, communication_thread, GPS_thead, topSpeed_thread, tailgate_thread;
     
     //Four threads: display, master, communication, GPS
     pthread_create(&display_thread, NULL, display, NULL);
     pthread_create(&master_thread, NULL, master, NULL);
     pthread_create(&communication_thread, NULL, communication, NULL);
     pthread_create(&GPS_thead, NULL, GPS, NULL);
+    pthread_create(&topSpeed_thread, NULL, topSpeed, NULL);
+    pthread_create(&tailgate_thread, NULL, tailgate, NULL);
+    
     
     
     while(1)
@@ -73,21 +77,29 @@ void *master(void *ptr)
     {
         
         //Copy contents of receive_data.log and append to data.txt
-        char a[1];
+        char a[50];
         FILE *fp1;
         
         fp1 = fopen("receive_data.log", "r");
         int fd = open("data.txt", O_WRONLY | O_NONBLOCK | O_APPEND);
-        
-        a[0] = fgetc(fp1);
-        while (a[0] != EOF)
+        ofstream tailgateStream;
+        tailgateStream.open("tailgate.log");
+        while(fgets(a, sizeof(a), fp1))
         {
-            write(fd, a, sizeof(a));
-            a[0] = fgetc(fp1);
+            if(strstr(a, "tailgate"))
+            {
+                tailgateStream << a;
+            }
+            else
+            {
+                write(fd, a, sizeof(a));
+            }
         }
+        
         
         close(fd);
         fclose(fp1);
+        tailgateStream.close();
         
         //set semaphore for driver camera
         sem_post(&communication_signal);
@@ -125,35 +137,83 @@ void *GPS(void *ptr)
 
 void *topSpeed(void *ptr)
 {
-    //wait for top speed signal
-    sem_wait(&topspeed_signal);
-    
-    static int topSpeed;
-    char buffer[5];
-    string speed;
-    
-    int fd = open("speed.txt", O_RDONLY | O_NONBLOCK);
-    read(fd, buffer, 5);
-    close(fd);
-    for(int i = 0; i < 5; i++)
+    while(1)
     {
-        if(buffer[i] >= 48 && buffer[i] <= 57)
+        //wait for top speed signal
+        
+        sem_wait(&topspeed_signal);
+        
+        static int topSpeed;
+        char buffer[5];
+        string speed;
+        
+        int fd = open("speed.txt", O_RDONLY | O_NONBLOCK);
+        read(fd, buffer, 5);
+        close(fd);
+        for(int i = 0; i < 5; i++)
         {
-            speed = speed + buffer[i];
+            if(buffer[i] >= 48 && buffer[i] <= 57)
+            {
+                speed = speed + buffer[i];
+            }
         }
+        if(topSpeed < stoi(speed))
+        {
+            topSpeed = stoi(speed);
+        }
+        
+        int fd2 = open("topspeed.txt", O_WRONLY | O_NONBLOCK);
+        strcpy(buffer, speed.c_str());
+        write(fd2, buffer, 5);
+        close(fd2);
+        
+        //send tailgate signal
+        sem_post(&tailgate_signal);
     }
-    if(topSpeed < stoi(speed))
-    {
-        topSpeed = stoi(speed);
-    }
-    
-    int fd2 = open("topspeed.txt", O_WRONLY | O_NONBLOCK);
-    strcpy(buffer, speed.c_str());
-    write(fd2, buffer, 5);
-    close(fd2);
-    
-    //send master signal
-    sem_post(&master_signal);
-    
 }
 
+void *tailgate(void *ptr)
+{
+    while(1)
+    {
+        //wait for tailgate signal
+        sem_wait(&tailgate_signal);
+        
+        ifsteam tailgateStream, speedStream;
+        string tailgate, speedString;
+        char speed[5];
+        char tailgate[50];
+        
+        int fd = open("speed.txt", O_RDONLY | O_NONBLOCK);
+        
+        read(fd, speed, 5);
+        close(fd);
+        
+        //convert speed from char array to string
+        for(int i = 0; i < 5; i++)
+        {
+            if(speed[i] >= 48 && speed[i] <= 57)
+            {
+                speedString = speedString + speed[i];
+            }
+        }
+        
+        //check speed greater than 50
+        if(stoi(speedString) > 50)
+        {
+            //get tailgate
+            int fd2 = open("tailgate.log", O_RDONLY | O_NONBLOCK);
+            read(fd2, tailgate, sizeof(tailgate));
+            close(fd2);
+            
+            //append tailgate
+            int fd3 = open("data.txt", O_WRONLY | O_NONBLOCK | O_APPEND);
+            write(fd3, tailgate, sizeof(tailgate));
+            close(fd3);
+        }
+        
+        //send master signal
+        sem_post(&master_signal);
+        
+    }
+}

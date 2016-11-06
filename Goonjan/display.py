@@ -42,7 +42,7 @@ def showClock(clockScreen):
     label = myfont.render("Activity Log: ", 1, (255,255,0))
     screen.blit(label, (100,300)) 
 
-    with open('Data.txt', 'rU') as fp:
+    with open('data.txt', 'rU', os.O_NONBLOCK) as fp:
       number = 360
       for line in fp:
          line = line.rstrip('\n')
@@ -57,7 +57,7 @@ def showClock(clockScreen):
          label = speedfont.render(line,1,(255,255,0))
          screen.blit(label, (500,70))
 
-    with open('mph.txt', 'rU') as fp:
+    with open('mph.txt', 'rU', os.O_NONBLOCK) as fp:
       for line in fp:
          line = line.rstrip('\n')
          label = mphfont.render(line,1,(255,255,0))
