@@ -179,10 +179,10 @@ void *tailgate(void *ptr)
         //wait for tailgate signal
         sem_wait(&tailgate_signal);
         
-        ifsteam tailgateStream, speedStream;
+        ifstream tailgateStream, speedStream;
         string tailgate, speedString;
         char speed[5];
-        char tailgate[50];
+        char tailgateBuffer[50];
         
         int fd = open("speed.txt", O_RDONLY | O_NONBLOCK);
         
@@ -203,12 +203,12 @@ void *tailgate(void *ptr)
         {
             //get tailgate
             int fd2 = open("tailgate.log", O_RDONLY | O_NONBLOCK);
-            read(fd2, tailgate, sizeof(tailgate));
+            read(fd2, tailgateBuffer, sizeof(tailgate));
             close(fd2);
             
             //append tailgate
             int fd3 = open("data.txt", O_WRONLY | O_NONBLOCK | O_APPEND);
-            write(fd3, tailgate, sizeof(tailgate));
+            write(fd3, tailgateBuffer, sizeof(tailgate));
             close(fd3);
         }
         
