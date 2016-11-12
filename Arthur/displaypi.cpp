@@ -78,13 +78,23 @@ void *master(void *ptr)
         
         //Copy contents of receive_data.log and append to data.txt
         char a[50];
-        FILE *fp1;
         
-        fp1 = fopen("receive_data.log", "r");
-        int fd = open("data.txt", O_WRONLY | O_NONBLOCK | O_APPEND);
+        //exclusive lock for receive_data
+        struct flock fl1 = {F_UNLCK, SEEK_SET, 0, 100, 0};
+        struct flock fl2 = {F_UNLCK, SEEK_SET, 0, 100, 0};
+        
+        fl1.l_type = LOCK_EX;
+        fl2.l_type = LOCK_EX;
+        
+        int fd1 = open("receive_data.log", O_RDONLY);
+        fcntl(fd1, F_SETLKW,&fl1);
+        
+        int fd2 = open("data.txt", O_WRONLY | O_APPEND);
+        fcntl(fd2, F_SETLKW,&fl2);
+        
         ofstream tailgateStream;
         tailgateStream.open("tailgate.log");
-        while(fgets(a, sizeof(a), fp1))
+        while(read(fd1, a, sizeof(a)))
         {
             if(strstr(a, "tailgate"))
             {
@@ -92,13 +102,16 @@ void *master(void *ptr)
             }
             else
             {
-                write(fd, a, sizeof(a));
+                write(fd2, a, sizeof(a));
             }
         }
         
         
-        close(fd);
-        fclose(fp1);
+        fl1.l_type = LOCK_UN;
+        fl2.l_type = LOCK_UN;
+        
+        close(fd1);
+        close(fd2);
         tailgateStream.close();
         
         //set semaphore for driver camera
@@ -140,15 +153,22 @@ void *topSpeed(void *ptr)
     while(1)
     {
         //wait for top speed signal
-        
         sem_wait(&topspeed_signal);
         
         static int topSpeed;
         char buffer[5];
         string speed;
         
-        int fd = open("speed.txt", O_RDONLY | O_NONBLOCK);
+        //exclusive lock for receive_data
+        struct flock fl1 = {F_UNLCK, SEEK_SET, 0, 100, 0};
+        fl1.l_type = LOCK_EX;
+        
+        int fd = open("speed.txt", O_RDONLY);
+        fcntl(fd, F_SETLKW,&fl1);
+        
         read(fd, buffer, 5);
+        
+        fl1.l_type = LOCK_UN;
         close(fd);
         for(int i = 0; i < 5; i++)
         {
@@ -162,9 +182,17 @@ void *topSpeed(void *ptr)
             topSpeed = stoi(speed);
         }
         
-        int fd2 = open("topspeed.txt", O_WRONLY | O_NONBLOCK);
+        //exclusive lock for receive_data
+        struct flock fl2 = {F_UNLCK, SEEK_SET, 0, 100, 0};
+        fl2.l_type = LOCK_EX;
+        
+        int fd2 = open("topspeed.txt", O_WRONLY);
+        fcntl(fd2, F_SETLKW, &fl2);
+        
         strcpy(buffer, speed.c_str());
         write(fd2, buffer, 5);
+        
+        fl2.l_type = LOCK_UN;
         close(fd2);
         
         //send tailgate signal
@@ -184,9 +212,16 @@ void *tailgate(void *ptr)
         char speed[5];
         char tailgateBuffer[50];
         
-        int fd = open("speed.txt", O_RDONLY | O_NONBLOCK);
+        //exclusive lock for receive_data
+        struct flock fl1 = {F_UNLCK, SEEK_SET, 0, 100, 0};
+        fl1.l_type = LOCK_EX;
+        
+        int fd = open("speed.txt", O_RDONLY);
+        fcntl(fd, F_SETLKW,&fl1);
         
         read(fd, speed, 5);
+        
+        fl1.l_type = LOCK_UN;
         close(fd);
         
         //convert speed from char array to string
@@ -201,14 +236,29 @@ void *tailgate(void *ptr)
         //check speed greater than 50
         if(stoi(speedString) > 50)
         {
+            //exclusive lock for receive_data
+            struct flock fl2 = {F_UNLCK, SEEK_SET, 0, 100, 0};
+            fl2.l_type = LOCK_EX;
+            
+            struct flock fl3 = {F_UNLCK, SEEK_SET, 0, 100, 0};
+            fl3.l_type = LOCK_EX;
+            
             //get tailgate
-            int fd2 = open("tailgate.log", O_RDONLY | O_NONBLOCK);
+            int fd2 = open("tailgate.log", O_RDONLY);
+            fcntl(fd2, F_SETLKW,&fl2);
+            
             read(fd2, tailgateBuffer, sizeof(tailgate));
+            
+            fl2.l_type = LOCK_UN;
             close(fd2);
             
             //append tailgate
-            int fd3 = open("data.txt", O_WRONLY | O_NONBLOCK | O_APPEND);
+            int fd3 = open("data.txt", O_WRONLY | O_APPEND);
+            fcntl(fd3, F_SETLKW,&fl3);
+            
             write(fd3, tailgateBuffer, sizeof(tailgate));
+            
+            fl3.l_type = LOCK_UN;
             close(fd3);
         }
         

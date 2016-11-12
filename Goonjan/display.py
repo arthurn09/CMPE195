@@ -4,6 +4,7 @@ import pygame
 from time import strftime
 import csv
 from pprint import pprint
+import fcntl
 
 #Size of display on touchscreen
 size = (750,500)
@@ -51,24 +52,29 @@ def showClock(clockScreen):
          number+=10 
 
 
-    with open('"speed.txt",'r', os.O_NONBLOCK) as fp:
+    with open('"speed.txt",'r') as fp:
+    fcntl.flock(fd, fcntl.LOCK_EX)
       for line in fp:
          line = line.rstrip('\n')
          label = speedfont.render(line,1,(255,255,0))
          screen.blit(label, (500,70))
+    fcntl.flock(fd, fcntl.LOCK_UN)
 
-    with open('mph.txt', 'rU', os.O_NONBLOCK) as fp:
+    with open('mph.txt', 'r') as fp:
+    fcntl.flock(fd, fcntl.LOCK_EX)
       for line in fp:
          line = line.rstrip('\n')
          label = mphfont.render(line,1,(255,255,0))
          screen.blit(label, (300,70))
-
+    fcntl.flock(fd, fcntl.LOCK_UN)
 
     with open('grade.txt', 'rU') as fp:
+    fcntl.flock(fd, fcntl.LOCK_EX)
       for line in fp:
          line = line.rstrip('\n')
          label = gradefont.render(line,1,(255,255,0))
          screen.blit(label, (130,70))
+    fcntl.flock(fd, fcntl.LOCK_UN)
 
     pygame.init()
     pygame.font.init()
