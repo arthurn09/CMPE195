@@ -110,6 +110,9 @@ void *master(void *ptr)
         fl1.l_type = LOCK_UN;
         fl2.l_type = LOCK_UN;
         
+        fcntl(fd1, F_SETLK,&fl1);
+        fcntl(fd2, F_SETLK,&fl2);
+        
         close(fd1);
         close(fd2);
         tailgateStream.close();
@@ -169,7 +172,9 @@ void *topSpeed(void *ptr)
         read(fd, buffer, 5);
         
         fl1.l_type = LOCK_UN;
+        fcntl(fd, F_SETLK,&fl1);
         close(fd);
+        
         for(int i = 0; i < 5; i++)
         {
             if(buffer[i] >= 48 && buffer[i] <= 57)
@@ -193,6 +198,7 @@ void *topSpeed(void *ptr)
         write(fd2, buffer, 5);
         
         fl2.l_type = LOCK_UN;
+        fcntl(fd2, F_SETLK,&fl2);
         close(fd2);
         
         //send tailgate signal
@@ -222,6 +228,7 @@ void *tailgate(void *ptr)
         read(fd, speed, 5);
         
         fl1.l_type = LOCK_UN;
+        fcntl(fd, F_SETLK,&fl1);
         close(fd);
         
         //convert speed from char array to string
@@ -250,6 +257,7 @@ void *tailgate(void *ptr)
             read(fd2, tailgateBuffer, sizeof(tailgate));
             
             fl2.l_type = LOCK_UN;
+            fcntl(fd2, F_SETLK,&fl2);
             close(fd2);
             
             //append tailgate
@@ -259,6 +267,7 @@ void *tailgate(void *ptr)
             write(fd3, tailgateBuffer, sizeof(tailgate));
             
             fl3.l_type = LOCK_UN;
+            fcntl(fd3, F_SETLK,&fl3);
             close(fd3);
         }
         
