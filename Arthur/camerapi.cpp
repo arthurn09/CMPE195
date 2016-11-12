@@ -14,8 +14,8 @@
 #include <string>
 using namespace std;
 
-#define BLIND_SPOT_LOG		"blind_spot.log"
-#define LANE_CHANGE_LOG		"lane_change.log"
+#define BLIND_SPOT_LOG		"blindspot.log"
+#define LANE_CHANGE_LOG		"lanechange.log"
 #define DISTRACTED_LOG		"distracted.log"
 #define TAILGATE_LOG		"tailgate.log"
 #define SEND_DATA_TXT		"send_data.txt"

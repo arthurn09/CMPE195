@@ -1,9 +1,11 @@
 import socket
 
+#add flag for read from file and add multiple lines
+
 UDP_IP = "10.0.0.228"
 UDP_PORT = 5005
 
-f = open('data.txt' , 'r')
+f = open('send_data.txt' , 'r')
 
 # Read multiple lines
 #for line in f:

@@ -1,5 +1,7 @@
 import socket
 
+#add write flag to file
+
 UDP_IP = "10.0.0.228"
 
 UDP_PORT = 5005
