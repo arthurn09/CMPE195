@@ -2,7 +2,9 @@ import socket
 
 #add flag for read from file and add multiple lines
 
-UDP_IP = "10.0.0.228"
+#UDP_IP = "10.0.0.228" 
+UPD_IP = [(s.connect(('8.8.8.8', 53)), s.getsockname()[0], s.close()) for s in [socket.socket(socket.AF_INET, socket.SOCK_DGRAM)]][0][1]
+
 UDP_PORT = 5005
 
 f = open('send_data.txt' , 'r')
