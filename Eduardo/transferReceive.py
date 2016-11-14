@@ -1,4 +1,5 @@
 import socket
+import fcntl
 
 #add write flag to file
 
@@ -13,12 +14,14 @@ sock.bind((UDP_IP, UDP_PORT))
 
 f = open("receive_data.txt","w") #opens file with name of "trial.txt"
 
-while True:
+fcntl.flock(f, fcntl.LOCK_EX)
 
-	data, addr = sock.recvfrom(1024) # buffer size is 1024 bytes
+data, addr = sock.recvfrom(1024) # buffer size is 1024 bytes
 	
-	print "received message:", data # prints to console
+print "received message:", data # prints to console
 
-	f.write(data) # writes to file
+f.write(data) # writes to file
+
+fcntl.flock(f, fcntl.LOCK_UN)
 
 f.close()

@@ -1,4 +1,5 @@
 import socket
+import fcntl
 
 #add flag for read from file and add multiple lines
 
@@ -8,6 +9,7 @@ UPD_IP = 169.254.23.217
 UDP_PORT = 5005
 
 f = open('send_data.txt' , 'r')
+fcntl.flock(f, fcntl.LOCK_EX)
 
 # Read multiple lines
 #for line in f:
@@ -16,6 +18,7 @@ f = open('send_data.txt' , 'r')
 # REad only one line
 MESSAGE = f.read()
 
+fcntl.flock(f, fcntl.LOCK_UN)
 f.close()
 
 # MESSAGE = "Hello, World!"
