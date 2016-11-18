@@ -18,11 +18,15 @@
 #include <string>
 using namespace std;
 
-#define NO_BLIND_SPOT_CHECK_LOG		"no_blind_spot_check.log"
-#define DISTRACTED_LOG				"distracted.log"
-#define TAILGATE_LOG				"tailgate.log"
-#define SPEED_LOG					"speed.log"
-#define RECEIVE_DATA_TXT			"receive_data.txt"
+//display.py
+//transferReceive.py
+//GPS.py
+//receive_data.log
+//tailgate.log
+//data.txt
+//speed.txt
+//topspeed.txt
+//speed.txt
 
 sem_t master_signal, communication_signal, topspeed_signal, tailgate_signal;
 
@@ -35,11 +39,6 @@ void *tailgate(void *ptr);
 
 int main() {
     
-    string no_blind_spot_check_log = NO_BLIND_SPOT_CHECK_LOG; //No blindspot check file
-    string distracted_log = DISTRACTED_LOG; //Distacted file
-    string tailgate_log = TAILGATE_LOG; //Distance of car in front
-    string speed_log = SPEED_LOG; //Speed file
-    string receive_data_txt = RECEIVE_DATA_TXT; //Communication file
     
     pthread_t display_thread, master_thread, communication_thread, GPS_thead, topSpeed_thread, tailgate_thread;
     
