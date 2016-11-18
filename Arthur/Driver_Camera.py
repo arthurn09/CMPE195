@@ -87,7 +87,6 @@ while count != 3:
     cv2.imwrite('frame.jpg', frame)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
-    
 
     count = count + 1
 

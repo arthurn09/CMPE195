@@ -60,7 +60,7 @@ void *driver(void *ptr)
         int systemCmd;
         systemCmd = system("python driver_camera.py");
         
-        sem_post(&dashboard_signal);
+        sem_post(&dashboardlanechange_signal);
     }
 }
 
