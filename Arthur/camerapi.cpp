@@ -98,6 +98,7 @@ void *master(void *ptr)
     string buffer;
     bool checkedBlindspot = false;
     bool laneChange = false;
+    bool tailgate = false;
     int distractedCount = 0;
     int blindspotCount = 0;
     
@@ -183,10 +184,23 @@ void *master(void *ptr)
         tailgatingStream.open("tailgate.log");
         while(getline(tailgatingStream, buffer))
         {
-            
+            if(buffer.find("tailgate") != string::npos)
+            {
+                //driver changed lanes
+                tailgate = true;
+            }
         }
         tailgatingStream.close();
         
+        if(tailgate == true)
+        {
+            //script to get time and report lane change
+            int systemCmd;
+            systemCmd = system("python Tailgate.py");
+            
+            //reset, no need
+            tailgate = false;
+        }
         
         //reset files
         blindspotWrite.open("blinspot.log");
