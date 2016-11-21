@@ -43,17 +43,19 @@ def showClock(clockScreen):
     label = myfont.render("Activity Log: ", 1, (255,255,0))
     screen.blit(label, (100,300)) 
 
-    with open('data.txt', 'rU', os.O_NONBLOCK) as fp:
+    with open('data.txt', 'rU') as fp:
+      fcntl.flock(fp, fcntl.LOCK_EX)
       number = 360
       for line in fp:
          line = line.rstrip('\n')
       	 label = myfont.render(line,1,(255,255,0))         
        	 screen.blit(label, (75,number))
-         number+=10 
+         number+=10
+      fcntl.flock(fp, fcntl.LOCK_UN)
 
 
-    with open('"speed.txt",'r') as fp:
-    fcntl.flock(fd, fcntl.LOCK_EX)
+    with open("speed.txt",'r') as fp:
+      fcntl.flock(fd, fcntl.LOCK_EX)
       for line in fp:
          line = line.rstrip('\n')
          label = speedfont.render(line,1,(255,255,0))
@@ -61,7 +63,7 @@ def showClock(clockScreen):
     fcntl.flock(fd, fcntl.LOCK_UN)
 
     with open('mph.txt', 'r') as fp:
-    fcntl.flock(fd, fcntl.LOCK_EX)
+      fcntl.flock(fd, fcntl.LOCK_EX)
       for line in fp:
          line = line.rstrip('\n')
          label = mphfont.render(line,1,(255,255,0))
@@ -69,7 +71,7 @@ def showClock(clockScreen):
     fcntl.flock(fd, fcntl.LOCK_UN)
 
     with open('grade.txt', 'rU') as fp:
-    fcntl.flock(fd, fcntl.LOCK_EX)
+      fcntl.flock(fd, fcntl.LOCK_EX)
       for line in fp:
          line = line.rstrip('\n')
          label = gradefont.render(line,1,(255,255,0))
