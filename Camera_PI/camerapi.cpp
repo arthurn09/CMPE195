@@ -187,7 +187,7 @@ void *master(void *ptr)
         {
             if(buffer.find("tailgate") != string::npos)
             {
-                //driver changed lanes
+                //driver tailgating
                 tailgate = true;
             }
         }
