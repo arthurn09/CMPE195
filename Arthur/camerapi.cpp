@@ -14,33 +14,33 @@
 #include <string>
 using namespace std;
 
-#define BLIND_SPOT_LOG		"blindspot.log"
-#define LANE_CHANGE_LOG		"lanechange.log"
-#define DISTRACTED_LOG		"distracted.log"
-#define TAILGATE_LOG		"tailgate.log"
-#define SEND_DATA_TXT		"send_data.txt"
+//driver_camera.py
+//dashboard_camera.py
+//BlindSpotChangeLanes.py
+//NoBlindSpot.py
+//transferSend.py
+//DistractedDriver.py
+//distracted.log
+//tailgate.log
+//blindspot.log
+//lanechange.log
 
-
-sem_t master_signal, driver_signal, dashboard_signal, communication_signal;
+sem_t master_signal, driver_signal, dashboardlanechange_signal, dashboardtailgate_signal, communication_signal;
 
 void *driver(void *ptr);
-void *dashboard(void *ptr);
+void *dashboard_lanechange(void *ptr);
+void *dashboard_tailgate(void *ptr);
 void *master(void *ptr);
 void *communication(void *ptr);
 
 int main() {
     
-    string blind_spot_log = BLIND_SPOT_LOG; //Blind spot check file
-    string lane_change_log = LANE_CHANGE_LOG; //Lane change file
-    string distracted_log = DISTRACTED_LOG; //Distracted file
-    string tailgate_log = TAILGATE_LOG; //License distance file
-    string send_data_txt = SEND_DATA_TXT; //Communication file
-    
-    pthread_t driver_thread, dashboard_thread, master_thread, communication_thread;
+    pthread_t driver_thread, dashboardlanechange_thread, dashboardtailgate_thread, master_thread, communication_thread;
     
     //Four threads: driver camera, dashboard camera, master, communication
     pthread_create(&driver_thread, NULL, driver, NULL);
-    pthread_create(&dashboard_thread, NULL, dashboard, NULL);
+    pthread_create(&dashboardlanechange_thread, NULL, dashboard_lanechange, NULL);
+    pthread_create(&dashboardtailgate_thread, NULL, dashboard_tailgate, NULL);
     pthread_create(&master_thread, NULL, master, NULL);
     pthread_create(&communication_thread, NULL, communication, NULL);
     
@@ -60,18 +60,31 @@ void *driver(void *ptr)
         int systemCmd;
         systemCmd = system("python driver_camera.py");
         
-        sem_post(&dashboard_signal);
+        sem_post(&dashboardlanechange_signal);
     }
 }
 
-void *dashboard(void *ptr)
+void *dashboard_lanechange(void *ptr)
 {
     while(1)
     {
-        sem_wait(&dashboard_signal);
+        sem_wait(&dashboardlanechange_signal);
         
         int systemCmd;
-        systemCmd = system("python dashboard_camera.py");
+        systemCmd = system("python dashboard_lanechange.py");
+        
+        sem_post(&dashboardtailgate_signal);
+    }
+}
+
+void *dashboard_tailgate(void *ptr)
+{
+    while(1)
+    {
+        sem_wait(&dashboardtailgate_signal);
+        
+        int systemCmd;
+        systemCmd = system("python dashboard_tailgate.py");
         
         sem_post(&master_signal);
     }
@@ -85,6 +98,7 @@ void *master(void *ptr)
     string buffer;
     bool checkedBlindspot = false;
     bool laneChange = false;
+    bool tailgate = false;
     int distractedCount = 0;
     int blindspotCount = 0;
     
@@ -170,10 +184,23 @@ void *master(void *ptr)
         tailgatingStream.open("tailgate.log");
         while(getline(tailgatingStream, buffer))
         {
-            
+            if(buffer.find("tailgate") != string::npos)
+            {
+                //driver changed lanes
+                tailgate = true;
+            }
         }
         tailgatingStream.close();
         
+        if(tailgate == true)
+        {
+            //script to get time and report lane change
+            int systemCmd;
+            systemCmd = system("python Tailgate.py");
+            
+            //reset, no need
+            tailgate = false;
+        }
         
         //reset files
         blindspotWrite.open("blinspot.log");
