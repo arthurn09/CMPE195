@@ -34,8 +34,10 @@ if __name__ == '__main__':
       #print gpsd.fix.latitude,', ',gpsd.fix.longitude,'  Time: ',gpsd.utc
  
       os.system('clear')
-      f = open("speed.txt",'w', os.O_NONBLOCK)
+      f = open("speed.txt",'w')
+      fcntl.flock(f, fcntl.LOCK_EX)
       f.write('%f'%(gpsd.fix.speed))
+      fcntl.flock(f, fcntl.LOCK_UN)
       f.close()
       print
       print ' GPS reading'
