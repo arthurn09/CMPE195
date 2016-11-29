@@ -7,11 +7,11 @@ from pprint import pprint
 import fcntl
 
 #Size of display on touchscreen
-size = (750,500)
+size = (800,480)
 /Users/arthurnguyen/Desktop/GitSeniorProject/Display_Pi/tailgate.log
 #Pygame initialization
 pygame.init()
-screen = pygame.display.set_mode(size)
+screen = pygame.display.set_mode(size, pygame.FULLSCREEN)
 
 #Title on display window
 pygame.display.set_caption("Driver Safety Report System")
@@ -121,8 +121,8 @@ while not quitloop:
         if event.type == pygame.QUIT:
             quitloop = True
 
-if pygame.time.get_ticks() > refresh:
+    if pygame.time.get_ticks() > refresh:
     
-    # Run the function to update display     
-    showClock(screen) 
+        # Run the function to update display
+        showClock(screen)
 
