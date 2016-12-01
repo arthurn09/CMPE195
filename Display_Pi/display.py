@@ -54,29 +54,29 @@ def showClock(clockScreen):
         fcntl.flock(fp, fcntl.LOCK_UN)
 
 
-with open('speed.txt','r') as fp:
-    fcntl.flock(fp, fcntl.LOCK_EX)
+    with open('speed.txt','r') as fp:
+        fcntl.flock(fp, fcntl.LOCK_EX)
         for line in fp:
             line = line.rstrip('\n')
             label = speedfont.render(line,1,(255,255,0))
             screen.blit(label, (500,70))
-    fcntl.flock(fp, fcntl.LOCK_UN)
+        fcntl.flock(fp, fcntl.LOCK_UN)
 
 with open('mph.txt', 'r') as fp:
     fcntl.flock(fp, fcntl.LOCK_EX)
-    for line in fp:
-        line = line.rstrip('\n')
-        label = mphfont.render(line,1,(255,255,0))
-        screen.blit(label, (300,70))
-    fcntl.flock(fp, fcntl.LOCK_UN)
+        for line in fp:
+            line = line.rstrip('\n')
+            label = mphfont.render(line,1,(255,255,0))
+            screen.blit(label, (300,70))
+        fcntl.flock(fp, fcntl.LOCK_UN)
 
-with open('grade.txt', 'rU') as fp:
-    fcntl.flock(fp, fcntl.LOCK_EX)
+    with open('grade.txt', 'rU') as fp:
+        fcntl.flock(fp, fcntl.LOCK_EX)
         for line in fp:
             line = line.rstrip('\n')
             label = gradefont.render(line,1,(255,255,0))
             screen.blit(label, (130,70))
-    fcntl.flock(fp, fcntl.LOCK_UN)
+        fcntl.flock(fp, fcntl.LOCK_UN)
 
 pygame.init()
     pygame.font.init()
@@ -121,8 +121,8 @@ while not quitloop:
         if event.type == pygame.QUIT:
             quitloop = True
 
-    if pygame.time.get_ticks() > refresh:
+if pygame.time.get_ticks() > refresh:
     
-        # Run the function to update display
-        showClock(screen)
+    # Run the function to update display
+    showClock(screen)
 
