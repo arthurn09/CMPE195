@@ -54,7 +54,7 @@ def showClock(clockScreen):
         fcntl.flock(fp, fcntl.LOCK_UN)
 
 
-    with open('speed.txt','r') as fp:
+    with open('topspeed.txt','r') as fp:
         fcntl.flock(fp, fcntl.LOCK_EX)
         for line in fp:
             line = line.rstrip('\n')
@@ -62,7 +62,7 @@ def showClock(clockScreen):
             screen.blit(label, (500,70))
         fcntl.flock(fp, fcntl.LOCK_UN)
 
-    with open('mph.txt', 'r') as fp:
+    with open('speed.txt', 'r') as fp:
         fcntl.flock(fp, fcntl.LOCK_EX)
         for line in fp:
             line = line.rstrip('\n')
@@ -78,7 +78,7 @@ def showClock(clockScreen):
             screen.blit(label, (130,70))
         fcntl.flock(fp, fcntl.LOCK_UN)
 
-pygame.init()
+    pygame.init()
     pygame.font.init()
     
     # Define some fonts to draw text with
@@ -121,8 +121,8 @@ while not quitloop:
         if event.type == pygame.QUIT:
             quitloop = True
 
-if pygame.time.get_ticks() > refresh:
+    if pygame.time.get_ticks() > refresh:
     
-    # Run the function to update display
-    showClock(screen)
+        # Run the function to update display
+        showClock(screen)
 
