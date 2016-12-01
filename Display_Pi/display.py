@@ -11,7 +11,7 @@ size = (800,480)
 /Users/arthurnguyen/Desktop/GitSeniorProject/Display_Pi/tailgate.log
 #Pygame initialization
 pygame.init()
-screen = pygame.display.set_mode(size, pygame.FULLSCREEN)
+screen = pygame.display.set_mode(size)
 
 #Title on display window
 pygame.display.set_caption("Driver Safety Report System")
@@ -54,7 +54,7 @@ def showClock(clockScreen):
         fcntl.flock(fp, fcntl.LOCK_UN)
 
 
-with open("speed.txt",'r') as fp:
+with open('speed.txt','r') as fp:
     fcntl.flock(fp, fcntl.LOCK_EX)
         for line in fp:
             line = line.rstrip('\n')
