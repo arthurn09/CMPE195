@@ -56,8 +56,6 @@ int main() {
     pthread_create(&grade_thread, NULL, grade, NULL);
     
     
-    
-    
     while(1)
     {
         //Keeps program running
@@ -72,6 +70,7 @@ void *display(void *ptr)
     {
         int systemCmd;
         systemCmd = system("python display.py");
+        systemCmd = system("echo \"display executed\"");
         
     }
 }
@@ -122,6 +121,7 @@ void *master(void *ptr)
         close(fd2);
         tailgateStream.close();
         
+        
         //set semaphore for driver camera
         sem_post(&communication_signal);
         
@@ -139,6 +139,7 @@ void *communication(void *ptr)
         
         int systemCmd;
         systemCmd = system("python transferReceive.py");
+        systemCmd = system("echo \"communication executed\"");
         
         //send master signal
         sem_post(&topspeed_signal);
@@ -151,7 +152,10 @@ void *GPS(void *ptr)
     while(1)
     {
         int systemCmd;
+        systemCmd = system("sudo gpsd /dev/ttyUSB0 -F /var/run/gpsd.sock");
         systemCmd = system("python GPS.py");
+        systemCmd = system("echo \"GPS executed\"");
+        
     }
     
 }
