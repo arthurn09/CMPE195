@@ -219,6 +219,7 @@ void *master(void *ptr)
         tailgateWrite.open("tailgate.log");
         tailgateWrite.close();
         
+        int systemCmd;
         systemCmd = system("echo \"master executed\"");
         
         //set semaphore for communication camera
