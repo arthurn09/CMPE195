@@ -60,6 +60,7 @@ void *driver(void *ptr)
         
         int systemCmd;
         systemCmd = system("python driver_camera.py");
+        systemCmd = system("echo \"driver camera executed\"");
         
         sem_post(&dashboardlanechange_signal);
     }
@@ -73,6 +74,7 @@ void *dashboard_lanechange(void *ptr)
         
         int systemCmd;
         systemCmd = system("python dashboard_lanechange.py");
+        systemCmd = system("echo \"dashboard lane change executed\"");
         
         sem_post(&dashboardtailgate_signal);
     }
@@ -86,6 +88,7 @@ void *dashboard_tailgate(void *ptr)
         
         int systemCmd;
         systemCmd = system("python dashboard_tailgate.py");
+        systemCmd = system("echo \"dashboard tailgate executed\"");
         
         sem_post(&master_signal);
     }
@@ -118,7 +121,7 @@ void *master(void *ptr)
         distractedStream.close();
         
         //distracted driving detected
-        if(distractedCount > 1)
+        if(distractedCount > 5)
         {
             //write distracted to data file
             int systemCmd;
@@ -141,7 +144,7 @@ void *master(void *ptr)
         blindspotStream.close();
         
         //driver checked blind spot
-        if(blindspotCount > 1)
+        if(blindspotCount > 5)
         {
             checkedBlindspot = true;
             blindspotCount = 0;
@@ -216,6 +219,8 @@ void *master(void *ptr)
         tailgateWrite.open("tailgate.log");
         tailgateWrite.close();
         
+        systemCmd = system("echo \"master executed\"");
+        
         //set semaphore for communication camera
         sem_post(&communication_signal);
         
@@ -233,6 +238,7 @@ void *communication(void *ptr)
         
         int systemCmd;
         systemCmd = system("python transferSend.py");
+        systemCmd = system("echo \"communication executed\"");
         
         //set semaphore for driver camera
         sem_post(&driver_signal);
