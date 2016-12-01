@@ -8,7 +8,7 @@ import fcntl
 
 #Size of display on touchscreen
 size = (800,480)
-/Users/arthurnguyen/Desktop/GitSeniorProject/Display_Pi/tailgate.log
+
 #Pygame initialization
 pygame.init()
 screen = pygame.display.set_mode(size)
