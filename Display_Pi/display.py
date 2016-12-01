@@ -62,8 +62,8 @@ def showClock(clockScreen):
             screen.blit(label, (500,70))
         fcntl.flock(fp, fcntl.LOCK_UN)
 
-with open('mph.txt', 'r') as fp:
-    fcntl.flock(fp, fcntl.LOCK_EX)
+    with open('mph.txt', 'r') as fp:
+        fcntl.flock(fp, fcntl.LOCK_EX)
         for line in fp:
             line = line.rstrip('\n')
             label = mphfont.render(line,1,(255,255,0))
