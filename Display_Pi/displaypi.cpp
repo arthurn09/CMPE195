@@ -46,6 +46,9 @@ int main() {
     
     pthread_t display_thread, master_thread, communication_thread, GPS_thead, topSpeed_thread, tailgate_thread, grade_thread;
     
+    int systemCmd;
+    systemCmd = system("configure_ip.sh");
+    
     //Four threads: display, master, communication, GPS
     pthread_create(&display_thread, NULL, display, NULL);
     pthread_create(&master_thread, NULL, master, NULL);
