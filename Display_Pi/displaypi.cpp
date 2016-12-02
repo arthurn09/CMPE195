@@ -40,6 +40,7 @@ void *grade(void *ptr);
 
 
 int gradeCount = 0;
+bool tailgateFlag = false;
 
 int main() {
     
@@ -89,11 +90,13 @@ void *master(void *ptr)
         //exclusive lock for receive_data
         struct flock fl1 = {F_UNLCK, SEEK_SET, 0, 100, 0};
         struct flock fl2 = {F_UNLCK, SEEK_SET, 0, 100, 0};
+        struct flock fl3 = {F_UNLCK, SEEK_SET, 0, 100, 0};
         
         fl1.l_type = LOCK_EX;
         fl2.l_type = LOCK_EX;
+        fl3.l_type = LOCK_EX;
         
-        int fd1 = open("receive_data.log", O_RDONLY);
+        int fd1 = open("receive_data.txt", O_RDONLY);
         fcntl(fd1, F_SETLKW,&fl1);
         
         int fd2 = open("data.txt", O_WRONLY | O_APPEND);
@@ -105,6 +108,7 @@ void *master(void *ptr)
         {
             if(strstr(a, "tailgate"))
             {
+                tailgateFlag = true;
                 tailgateStream << a;
             }
             else
@@ -112,7 +116,6 @@ void *master(void *ptr)
                 write(fd2, a, sizeof(a));
             }
         }
-        
         
         fl1.l_type = LOCK_UN;
         fl2.l_type = LOCK_UN;
@@ -123,6 +126,14 @@ void *master(void *ptr)
         close(fd1);
         close(fd2);
         tailgateStream.close();
+        
+        
+        //reset receive_data file
+        int fd3 = open("receive_data.txt", O_WRONLY);
+        fcntl(fd3, F_SETLKW,&fl3);
+        fl3.l_type = LOCK_UN;
+        fcntl(fd2, F_SETLK,&fl3);
+        close(fd3);
         
         
         //set semaphore for driver camera
@@ -252,8 +263,8 @@ void *tailgate(void *ptr)
             }
         }
         
-        //check speed greater than 50
-        if(stoi(speedString) > 50)
+        //check speed greater than 50 for tailgate
+        if(stoi(speedString) > 50 && tailgateFlag)
         {
             //exclusive lock for receive_data
             struct flock fl2 = {F_UNLCK, SEEK_SET, 0, 100, 0};
@@ -272,7 +283,7 @@ void *tailgate(void *ptr)
             fcntl(fd2, F_SETLK,&fl2);
             close(fd2);
             
-            //append tailgate
+            //append tailgate to data
             int fd3 = open("data.txt", O_WRONLY | O_APPEND);
             fcntl(fd3, F_SETLKW,&fl3);
             
@@ -282,6 +293,8 @@ void *tailgate(void *ptr)
             fcntl(fd3, F_SETLK,&fl3);
             close(fd3);
         }
+        
+        tailgateFlag = false;
         
         //send master signal
         sem_post(&grade_signal);
