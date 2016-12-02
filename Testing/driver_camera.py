@@ -37,7 +37,7 @@ while count < 20:
     count += 1
 count = 0
 #change count to lower script
-while count < 10:
+while True:
     
     print(count)
     
@@ -88,13 +88,13 @@ while count < 10:
         else:
             print('Driving safely')
 
+    #write image
+    cv2.imshow('frame.jpg', frame)
     
     count = count + 1
 
 
 
-    #write image
-    cv2.imwrite('frame.jpg', frame)
 
 
 
