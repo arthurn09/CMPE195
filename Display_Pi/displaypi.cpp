@@ -220,7 +220,7 @@ void *topSpeed(void *ptr)
         //write top speed to file
         sprintf(buffer, "%i", topSpeed);
         
-        write(fd2, buffer, 5);
+        write(fd2, buffer, strlen(buffer));
         
         fl2.l_type = LOCK_UN;
         fcntl(fd2, F_SETLK,&fl2);
