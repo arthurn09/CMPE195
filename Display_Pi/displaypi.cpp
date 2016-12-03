@@ -217,7 +217,9 @@ void *topSpeed(void *ptr)
         int fd2 = open("topspeed.txt", O_WRONLY);
         fcntl(fd2, F_SETLKW, &fl2);
         
-        strcpy(buffer, speed.c_str());
+        //write top speed to file
+        sprintf(buffer, "%i", topSpeed);
+        
         write(fd2, buffer, 5);
         
         fl2.l_type = LOCK_UN;
