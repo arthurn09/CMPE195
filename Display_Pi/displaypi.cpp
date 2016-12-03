@@ -185,9 +185,8 @@ void *topSpeed(void *ptr)
         //wait for top speed signal
         sem_wait(&topspeed_signal);
         
-        static int topSpeed;
-        char buffer[5];
-        string speed;
+        static int topSpeed = 0;
+        char buffer[5] = "0";
         
         //exclusive lock for receive_data
         struct flock fl1 = {F_UNLCK, SEEK_SET, 0, 100, 0};
@@ -202,13 +201,10 @@ void *topSpeed(void *ptr)
         fcntl(fd, F_SETLK,&fl1);
         close(fd);
         
-        for(int i = 0; i < 5; i++)
-        {
-            if(buffer[i] >= 48 && buffer[i] <= 57)
-            {
-                speed = speed + buffer[i];
-            }
-        }
+        //copy char buffer to string
+        string speed(buffer);
+        
+        //compare topSpeed to speed read from file
         if(topSpeed < stoi(speed))
         {
             topSpeed = stoi(speed);
