@@ -114,7 +114,7 @@ def filter():
                     getIntersection(line1, line2,image)
             
             #video_writer.write(image)
-            #cv2.imshow('frame', image)
+            cv2.imshow('frame', image)
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
 

@@ -44,7 +44,7 @@ else:
                 coordinatesFile.write('Driver tailgating '),
                 coordinatesFile.write('%s\n' % (datetime.datetime.now()))
                 coordinatesFile.close()
-        #cv2.imshow('Video', image)
+        cv2.imshow('Video', image)
 
 
         count = count + 1

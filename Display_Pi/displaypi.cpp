@@ -70,13 +70,15 @@ int main() {
 
 void *display(void *ptr)
 {
+    
+    int systemCmd;
+    systemCmd = system("python display.py");
+    systemCmd = system("echo \"display executed\"");
     while(1)
     {
-        int systemCmd;
-        systemCmd = system("python display.py");
-        systemCmd = system("echo \"display executed\"");
         
     }
+    
 }
 
 void *master(void *ptr)
@@ -135,6 +137,8 @@ void *master(void *ptr)
         fcntl(fd2, F_SETLK,&fl3);
         close(fd3);
         
+        int systemCmd;
+        systemCmd = system("echo \"master executed\"");
         
         //set semaphore for driver camera
         sem_post(&communication_signal);
@@ -163,15 +167,15 @@ void *communication(void *ptr)
 
 void *GPS(void *ptr)
 {
+    int systemCmd;
+    systemCmd = system("sudo gpsd /dev/ttyUSB0 -F /var/run/gpsd.sock");
+    systemCmd = system("python GPS.py");
+    systemCmd = system("echo \"GPS executed\"");
+    
     while(1)
     {
-        int systemCmd;
-        systemCmd = system("sudo gpsd /dev/ttyUSB0 -F /var/run/gpsd.sock");
-        systemCmd = system("python GPS.py");
-        systemCmd = system("echo \"GPS executed\"");
         
     }
-    
 }
 
 void *topSpeed(void *ptr)
@@ -223,6 +227,9 @@ void *topSpeed(void *ptr)
         fl2.l_type = LOCK_UN;
         fcntl(fd2, F_SETLK,&fl2);
         close(fd2);
+        
+        int systemCmd;
+        systemCmd = system("echo \"top speed executed\"");
         
         //send tailgate signal
         sem_post(&tailgate_signal);
@@ -296,6 +303,9 @@ void *tailgate(void *ptr)
         
         tailgateFlag = false;
         
+        int systemCmd;
+        systemCmd = system("echo \"tailgate executed\"");
+        
         //send master signal
         sem_post(&grade_signal);
         
@@ -357,6 +367,9 @@ void *grade(void *ptr)
         gradeStream.open("grade.txt");
         gradeStream << gradeLetter;
         gradeStream.close();
+        
+        int systemCmd;
+        systemCmd = system("echo \"grade executed\"");
         
         //send master signal
         sem_post(&master_signal);
