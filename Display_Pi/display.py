@@ -43,12 +43,13 @@ def showClock(clockScreen):
     label = myfont.render("Activity Log: ", 1, (255,255,0))
     screen.blit(label, (100,300))
     
-    
+    gradeCount = 0
     with open('data.txt', 'rU') as fp:
         fcntl.flock(fp, fcntl.LOCK_EX)
         number = 350
         fp.seek(0)
         for line in fp:
+            gradeCount = gradeCount + 1
             if(len(line)>0):
                 try:
                     line = line.rstrip('\n')
@@ -86,13 +87,26 @@ def showClock(clockScreen):
                 pass
         fcntl.flock(fp, fcntl.LOCK_UN)
 
+    gradeletter = 'A'
+    if gradeCount < 3:
+        gradeLetter = 'A'
+    elif gradeCount >= 3 and gradeCount< 6:
+        gradeLetter = 'B'
+    elif gradeCount >= 6 and gradeCount< 9:
+        gradeLetter = 'C'
+    elif gradeCount >= 9 and gradeCount< 12:
+        gradeLetter = 'D'
+    else:
+        gradeLetter = 'F';
+
     with open('grade.txt', 'rU') as fp:
         fcntl.flock(fp, fcntl.LOCK_EX)
         fp.seek(0)
         line = fp.read()
         if(len(line)>0):
             try:
-                line = line.rstrip('\n')
+                #line = line.rstrip('\n')
+                line = gradeLetter
                 label = gradefont.render(line,1,(255,255,0))
                 screen.blit(label, (130,70))
             except ValueError:
