@@ -218,7 +218,7 @@ void *topSpeed(void *ptr)
         fcntl(fd2, F_SETLKW, &fl2);
         
         //write top speed to file
-        sprintf(buffer, "%i", topSpeed);
+        sprintf(buffer, "%3d", topSpeed);
         
         write(fd2, buffer, strlen(buffer));
         
