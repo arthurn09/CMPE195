@@ -43,41 +43,62 @@ def showClock(clockScreen):
     label = myfont.render("Activity Log: ", 1, (255,255,0))
     screen.blit(label, (100,300))
     
+    
     with open('data.txt', 'rU') as fp:
         fcntl.flock(fp, fcntl.LOCK_EX)
         number = 360
-        for line in fp:
-            line = line.rstrip('\n')
-            label = myfont.render(line,1,(255,255,0))
-            screen.blit(label, (75,number))
-            number+=10
+        fp.seek(0)
+        line = fp.read()
+        if(len(line)>0):
+            try:
+                line = line.rstrip('\n')
+                label = myfont.render(line,1,(255,255,0))
+                screen.blit(label, (75,number))
+                number+=10
+            except ValueError:
+                pass
         fcntl.flock(fp, fcntl.LOCK_UN)
-
-
+    
+    
     with open('topspeed.txt','r') as fp:
         fcntl.flock(fp, fcntl.LOCK_EX)
-        for line in fp:
-            line = line.rstrip('\n')
-            label = speedfont.render(line,1,(255,255,0))
-            screen.blit(label, (500,70))
+        fp.seek(0)
+        line = fp.read()
+        if(len(line)>0):
+            try:
+                line = line.rstrip('\n')
+                label = speedfont.render(line,1,(255,255,0))
+                screen.blit(label, (500,70))
+            except ValueError:
+                pass
         fcntl.flock(fp, fcntl.LOCK_UN)
-
+    
     with open('speed.txt', 'r') as fp:
         fcntl.flock(fp, fcntl.LOCK_EX)
-        for line in fp:
-            line = line.rstrip('\n')
-            label = mphfont.render(line,1,(255,255,0))
-            screen.blit(label, (300,70))
+        fp.seek(0, 0)
+        line = fp.read()
+        if(len(line)>0):
+            try:
+                line = line.rstrip('\n')
+                label = mphfont.render(line,1,(255,255,0))
+                screen.blit(label, (300,70))
+            except ValueError:
+                pass
         fcntl.flock(fp, fcntl.LOCK_UN)
-
+    
     with open('grade.txt', 'rU') as fp:
         fcntl.flock(fp, fcntl.LOCK_EX)
-        for line in fp:
-            line = line.rstrip('\n')
-            label = gradefont.render(line,1,(255,255,0))
-            screen.blit(label, (130,70))
+        fp.seek(0)
+        line = fp.read()
+        if(len(line)>0):
+            try:
+                line = line.rstrip('\n')
+                label = gradefont.render(line,1,(255,255,0))
+                screen.blit(label, (130,70))
+            except ValueError:
+                pass
         fcntl.flock(fp, fcntl.LOCK_UN)
-
+    
     pygame.init()
     pygame.font.init()
     
@@ -122,7 +143,6 @@ while not quitloop:
             quitloop = True
 
     if pygame.time.get_ticks() > refresh:
-    
+        
         # Run the function to update display
         showClock(screen)
-
