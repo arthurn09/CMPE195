@@ -115,7 +115,11 @@ void *master(void *ptr)
             }
             else
             {
-                write(fd2, a, sizeof(a));
+                if(strlen(a)>5)
+                {
+                    string temp(a);
+                    write(fd2, a, strlen(a));
+                }
             }
         }
         
@@ -131,11 +135,12 @@ void *master(void *ptr)
         
         
         //reset receive_data file
-        int fd3 = open("receive_data.txt", O_WRONLY);
-        fcntl(fd3, F_SETLKW,&fl3);
-        fl3.l_type = LOCK_UN;
-        fcntl(fd2, F_SETLK,&fl3);
-        close(fd3);
+        //        int fd3 = open("receive_data.txt", O_WRONLY);
+        //        fcntl(fd3, F_SETLKW,&fl3);
+        //        fl3.l_type = LOCK_UN;
+        //        fcntl(fd2, F_SETLK,&fl3);
+        //        close(fd3);
+        fclose(fopen("receive_data.txt", "w"));
         
         int systemCmd;
         systemCmd = system("echo \"master executed\"");
