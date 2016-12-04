@@ -7,27 +7,37 @@ UDP_IP = "169.254.23.217"
 
 UDP_PORT = 5005
 
-f = open('send_data.txt' , 'r')
+sock = socket.socket(socket.AF_INET, # Internet
+                     
+socket.SOCK_DGRAM) # UDP
+
+print "UDP target IP:", UDP_IP
+
+print "UDP target port:", UDP_PORT
+
+with open('send_data.txt') as fp:
+    for MESSAGE in fp:
+        print "message:", MESSAGE
+        sock.sendto(MESSAGE, (UDP_IP, UDP_PORT))
+
+
+
+#f = open('send_data.txt' , 'r')
 
 # Read multiple lines
 #for line in f:
 #   MESSAGE = line
 
 # REad only one line
-MESSAGE = f.readline()
 
-f.close()
+
+#f.close()
 
 # MESSAGE = "Hello, World!"
 
-print "UDP target IP:", UDP_IP
 
-print "UDP target port:", UDP_PORT
-print "message:", MESSAGE
 
-sock = socket.socket(socket.AF_INET, # Internet
 
-socket.SOCK_DGRAM) # UDP
 
-sock.sendto(MESSAGE, (UDP_IP, UDP_PORT))
+
 
