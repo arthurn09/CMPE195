@@ -28,7 +28,7 @@ using namespace std;
 //topspeed.txt
 //speed.txt
 
-sem_t master_signal, communication_signal, topspeed_signal, tailgate_signal, grade_signal;
+sem_t master_signal, communication_signal, topspeed_signal, tailgate_signal;
 
 void *display(void *ptr);
 void *master(void *ptr);
@@ -36,16 +36,14 @@ void *communication(void *ptr);
 void *GPS(void *ptr);
 void *topSpeed(void *ptr);
 void *tailgate(void *ptr);
-void *grade(void *ptr);
 
 
-int gradeCount = 0;
 bool tailgateFlag = false;
 
 int main() {
     
     
-    pthread_t display_thread, master_thread, communication_thread, GPS_thead, topSpeed_thread, tailgate_thread, grade_thread;
+    pthread_t display_thread, master_thread, communication_thread, GPS_thead, topSpeed_thread, tailgate_thread;
     
     int systemCmd;
     systemCmd = system("configure_ip.sh");
@@ -57,7 +55,6 @@ int main() {
     pthread_create(&GPS_thead, NULL, GPS, NULL);
     pthread_create(&topSpeed_thread, NULL, topSpeed, NULL);
     pthread_create(&tailgate_thread, NULL, tailgate, NULL);
-    pthread_create(&grade_thread, NULL, grade, NULL);
     
     
     while(1)
@@ -308,71 +305,6 @@ void *tailgate(void *ptr)
         
         int systemCmd;
         systemCmd = system("echo \"tailgate executed\"");
-        
-        //send master signal
-        sem_post(&grade_signal);
-        
-    }
-}
-
-
-void *grade(void *ptr)
-{
-    while(1)
-    {
-        //wait for grade signal
-        sem_wait(&grade_signal);
-        
-        ofstream gradeStream;
-        
-        gradeCount = 0;
-        
-        char a[50];
-        char gradeLetter;
-        //exclusive lock for receive_data
-        struct flock fl1 = {F_UNLCK, SEEK_SET, 0, 100, 0};
-        
-        fl1.l_type = LOCK_EX;
-        
-        int fd = open("data.txt", O_RDONLY | O_APPEND);
-        fcntl(fd, F_SETLKW,&fl1);
-        
-        while (read(fd, a, sizeof(a)))
-        {
-            gradeCount++;
-        }
-        
-        fl1.l_type = LOCK_UN;
-        fcntl(fd, F_SETLK,&fl1);
-        close(fd);
-        
-        if(gradeCount < 3)
-        {
-            gradeLetter = 'A';
-        }
-        else if(gradeCount >= 3 && gradeCount< 6)
-        {
-            gradeLetter = 'B';
-        }
-        else if(gradeCount >= 6 && gradeCount< 9)
-        {
-            gradeLetter = 'C';
-        }
-        else if(gradeCount >= 9 && gradeCount< 12)
-        {
-            gradeLetter = 'D';
-        }
-        else
-        {
-            gradeLetter = 'F';
-        }
-        
-        gradeStream.open("grade.txt");
-        gradeStream << gradeLetter;
-        gradeStream.close();
-        
-        int systemCmd;
-        systemCmd = system("echo \"grade executed\"");
         
         //send master signal
         sem_post(&master_signal);
