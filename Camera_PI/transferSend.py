@@ -21,6 +21,9 @@ with open('send_data.txt') as fp:
         sock.sendto(MESSAGE, (UDP_IP, UDP_PORT))
 
 
+#reset file
+f = open('send_data.txt' , 'w')
+f.close()
 
 #f = open('send_data.txt' , 'r')
 
