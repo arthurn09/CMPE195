@@ -46,20 +46,20 @@ def showClock(clockScreen):
     
     with open('data.txt', 'rU') as fp:
         fcntl.flock(fp, fcntl.LOCK_EX)
-        number = 360
+        number = 350
         fp.seek(0)
-        line = fp.read()
-        if(len(line)>0):
-            try:
-                line = line.rstrip('\n')
-                label = myfont.render(line,1,(255,255,0))
-                screen.blit(label, (75,number))
-                number+=10
-            except ValueError:
-                pass
+        for line in fp:
+            if(len(line)>0):
+                try:
+                    line = line.rstrip('\n')
+                    label = myfont.render(line,1,(255,255,0))
+                    screen.blit(label, (75,number))
+                    number+=10
+                except ValueError:
+                    pass
         fcntl.flock(fp, fcntl.LOCK_UN)
-    
-    
+
+
     with open('topspeed.txt','r') as fp:
         fcntl.flock(fp, fcntl.LOCK_EX)
         fp.seek(0)
@@ -72,10 +72,10 @@ def showClock(clockScreen):
             except ValueError:
                 pass
         fcntl.flock(fp, fcntl.LOCK_UN)
-    
+
     with open('speed.txt', 'r') as fp:
         fcntl.flock(fp, fcntl.LOCK_EX)
-        fp.seek(0, 0)
+        fp.seek(0)
         line = fp.read()
         if(len(line)>0):
             try:
@@ -85,7 +85,7 @@ def showClock(clockScreen):
             except ValueError:
                 pass
         fcntl.flock(fp, fcntl.LOCK_UN)
-    
+
     with open('grade.txt', 'rU') as fp:
         fcntl.flock(fp, fcntl.LOCK_EX)
         fp.seek(0)
@@ -98,7 +98,7 @@ def showClock(clockScreen):
             except ValueError:
                 pass
         fcntl.flock(fp, fcntl.LOCK_UN)
-    
+
     pygame.init()
     pygame.font.init()
     
@@ -141,7 +141,7 @@ while not quitloop:
         # Handle quit message received
         if event.type == pygame.QUIT:
             quitloop = True
-
+    
     if pygame.time.get_ticks() > refresh:
         
         # Run the function to update display
