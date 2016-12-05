@@ -132,7 +132,7 @@ void *master(void *ptr)
         tailgateStream.close();
         
         
-        //reset receive_data file
+        //reset receive_data file, added to transfer_receive.py
         //        int fd3 = open("receive_data.txt", O_WRONLY);
         //        fcntl(fd3, F_SETLKW,&fl3);
         //        fl3.l_type = LOCK_UN;
@@ -213,7 +213,34 @@ void *topSpeed(void *ptr)
             topSpeed = stoi(speed);
         }
         
-        //exclusive lock for receive_data
+        //Speeding check
+        //exclusive lock for data.txt
+        static int speedingCount = 0;
+        struct flock fl3 = {F_UNLCK, SEEK_SET, 0, 100, 0};
+        
+        fl3.l_type = LOCK_EX;
+        
+        int fd3 = open("data.txt", O_WRONLY | O_APPEND);
+        fcntl(fd3, F_SETLKW,&fl3);
+        
+        if(stoi(speed) > 70)
+        {
+            speedingCount++;
+            if(speedingCount > 10)
+            {
+                char speedbuffer[] = "Speeding";
+                write(fd3, speedbuffer, strlen(speedbuffer));
+                memset(&speedbuffer[0], 0, sizeof(speedbuffer));
+                speedingCount = 0;
+            }
+            
+        }
+        
+        fl3.l_type = LOCK_UN;
+        fcntl(fd3, F_SETLK,&fl3);
+        close(fd3);
+        
+        //exclusive lock for top_speed.txt
         struct flock fl2 = {F_UNLCK, SEEK_SET, 0, 100, 0};
         fl2.l_type = LOCK_EX;
         
