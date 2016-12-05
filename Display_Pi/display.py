@@ -1,10 +1,15 @@
 #!/usr/bin/python
 # Import libraries
+#Uptime Resources
+#http://thesmithfam.org/blog/2005/11/19/python-uptime-script/
+
 import pygame
 from time import strftime
 import csv
 from pprint import pprint
 import fcntl
+import os
+import datetime
 
 #Size of display on touchscreen
 size = (800,480)
@@ -15,6 +20,40 @@ screen = pygame.display.set_mode(size)
 
 #Title on display window
 pygame.display.set_caption("Driver Safety Report System")
+
+def uptime():
+    
+    try:
+        f = open( "/proc/uptime" )
+        contents = f.read().split()
+        f.close()
+    except:
+        return "Cannot open uptime file: /proc/uptime"
+
+    total_seconds = float(contents[0])
+
+# Helper vars:
+MINUTE  = 60
+    HOUR    = MINUTE * 60
+    DAY     = HOUR * 24
+    
+    # Get the days, hours, etc:
+    days    = int( total_seconds / DAY )
+    hours   = int( ( total_seconds % DAY ) / HOUR )
+    minutes = int( ( total_seconds % HOUR ) / MINUTE )
+    seconds = int( total_seconds % MINUTE )
+    
+    # Build up the pretty string (like this: "N days, N hours, N minutes, N seconds")
+    string = ""
+    if days > 0:
+        string += str(days) + " " + (days == 1 and "day" or "days" ) + ", "
+    if len(string) > 0 or hours > 0:
+        string += str(hours) + " " + (hours == 1 and "hr" or "hrs" ) + ", "
+if len(string) > 0 or minutes > 0:
+    string += str(minutes) + " " + (minutes == 1 and "min" or "mins" ) + ", "
+        string += str(seconds) + " " + (seconds == 1 and "s" or "s" )
+    
+    return string;
 
 #Show Clock
 def showClock(clockScreen):
@@ -30,6 +69,8 @@ def showClock(clockScreen):
     gradefont = pygame.font.SysFont("Courier",60)
     speedfont = pygame.font.SysFont("Courier",70)
     mphfont = pygame.font.SysFont("Courier",50)
+    
+    
     #Text
     label = myfont.render("Current Grade: ", 1, (255,255,0))
     screen.blit(label, (100, 10))
@@ -40,8 +81,13 @@ def showClock(clockScreen):
     label = myfont.render("Top Speed: ", 1, (255,255,0))
     screen.blit(label, (500, 10))
     
+    label = myfont.render("Driving Trip: ", 1, (255,255,0))
+    screen.blit(label, (80,250))
+    label = myfont.render(uptime(), 1, (255,255,0))
+    screen.blit(label, (80, 270))
+    
     label = myfont.render("Activity Log: ", 1, (255,255,0))
-    screen.blit(label, (100,300))
+    screen.blit(label, (80,320))
     
     gradeCount = 0
     with open('data.txt', 'rU') as fp:
@@ -59,8 +105,8 @@ def showClock(clockScreen):
                 except ValueError:
                     pass
         fcntl.flock(fp, fcntl.LOCK_UN)
-
-
+    
+    
     with open('topspeed.txt','r') as fp:
         fcntl.flock(fp, fcntl.LOCK_EX)
         fp.seek(0)
@@ -73,7 +119,7 @@ def showClock(clockScreen):
             except ValueError:
                 pass
         fcntl.flock(fp, fcntl.LOCK_UN)
-
+    
     with open('speed.txt', 'r') as fp:
         fcntl.flock(fp, fcntl.LOCK_EX)
         fp.seek(0)
@@ -86,7 +132,7 @@ def showClock(clockScreen):
             except ValueError:
                 pass
         fcntl.flock(fp, fcntl.LOCK_UN)
-
+    
     gradeletter = 'A'
     if gradeCount < 3:
         gradeLetter = 'A'
@@ -98,7 +144,7 @@ def showClock(clockScreen):
         gradeLetter = 'D'
     else:
         gradeLetter = 'F';
-
+    
     with open('grade.txt', 'rU') as fp:
         fcntl.flock(fp, fcntl.LOCK_EX)
         fp.seek(0)
@@ -112,7 +158,7 @@ def showClock(clockScreen):
             except ValueError:
                 pass
         fcntl.flock(fp, fcntl.LOCK_UN)
-
+    
     pygame.init()
     pygame.font.init()
     
