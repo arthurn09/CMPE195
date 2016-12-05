@@ -16,6 +16,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <string.h>
+#include <ctype.h>
 using namespace std;
 
 //display.py
@@ -112,10 +113,10 @@ void *master(void *ptr)
             }
             else
             {
-                if(strlen(a)>5)
+                if(isalpha(a[0]))
                 {
-                    string temp(a);
                     write(fd2, a, strlen(a));
+                    memset(&a[0], 0, sizeof(a));
                 }
             }
         }
