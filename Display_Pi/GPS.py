@@ -31,14 +31,14 @@ if __name__ == '__main__':
   try:
     gpsp.start() # start it up
     while True:
-      speed = gps.fix.speed * 2.23694
+      speed = int(gps.fix.speed * 2.23694)
       #It may take a second or two to get good data
       #print gpsd.fix.latitude,', ',gpsd.fix.longitude,'  Time: ',gpsd.utc
  
       os.system('clear')
       f = open("speed.txt",'w')
       fcntl.flock(f, fcntl.LOCK_EX)
-      f.write('%f'%(speed))
+      f.write('%i'%(speed))
       fcntl.flock(f, fcntl.LOCK_UN)
       f.close()
       print
