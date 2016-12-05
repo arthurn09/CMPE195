@@ -65,7 +65,7 @@ while count < 10:
         #blind spot check log file append
         blind_spot_check_log_file = open('blindspot.log','a')
         blind_spot_check_log_file.write('Driver checked blind spot ')
-        blind_spot_check_log_file.write('%s\n' % (datetime.datetime.now()))
+        blind_spot_check_log_file.write('%s\n' % (time.strftime("%Y-%m-%d %H:%M:%S"))
         blind_spot_check_log_file.close()
 
     #detects face (driver is not checking blindspot)
@@ -81,7 +81,7 @@ while count < 10:
             #distracted log file append
             distracted = open('distracted.log', 'a')
             distracted.write('Driver distracted ')
-            distracted.write('%s\n' % (datetime.datetime.now()))
+            distracted.write('%s\n' % (time.strftime("%Y-%m-%d %H:%M:%S"))
             distracted.close()
         
         #detects both eyes (driver is not distrated)
