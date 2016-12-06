@@ -135,14 +135,14 @@ def filter():
 
 
                 if intAngle <= 80 and intAngle >= 10:
-                    cv2.line(image, (x1, y1), (x2, y2), (0, 255, 0), 5)
+                    cv2.line(image, (x1, y1), (x2, y2), (0, 255, 0), 20)
                     line1 = ([322, 479], [320, 239])
                     line2 = ([x1, y1], [x2, y2])
                     getIntersection(line1, line2,image)
 				if intAngle1 <= 165 and intAngle1 >= 100:
                     print("x1: %d y1: %d" % (x1, y1))
                     print ("x2 %d y2 %d" %(x2, y2))
-                    cv2.line(img, (x1, y1), (x2, y2), (255, 255, 0), 7)
+                    cv2.line(img, (x1, y1), (x2, y2), (255, 255, 0), 20)
                     print("BLUE")
                 print("****************************")
             
