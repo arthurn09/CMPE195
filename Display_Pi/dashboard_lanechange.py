@@ -10,6 +10,7 @@ import datetime
 import io
 import picamera
 
+
 def getIntersection(line1, line2,image):
 
     # first line
@@ -40,8 +41,6 @@ def getIntersection(line1, line2,image):
         cv2.putText(image, "Changing lanes", (399,470),cv2.FONT_HERSHEY_SIMPLEX, 1, (255,0,255),2)
 
     else:
-        cv2.putText(image, "Driving Safe", (0,470),cv2.FONT_HERSHEY_SIMPLEX, 1, (0,255,0),2)
-
         print "You are driving safe!"
 
 
