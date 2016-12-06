@@ -20,25 +20,12 @@ with open('send_data.txt') as fp:
         print "message:", MESSAGE
         sock.sendto(MESSAGE, (UDP_IP, UDP_PORT))
 
-
 #reset file
 f = open('send_data.txt' , 'w')
 f.close()
 
-#f = open('send_data.txt' , 'r')
-
-# Read multiple lines
-#for line in f:
-#   MESSAGE = line
-
-# REad only one line
-
-
-#f.close()
-
-# MESSAGE = "Hello, World!"
-
-
+#Reference
+#https://www.youtube.com/watch?v=u6kuHMY5pHM
 
 
 
