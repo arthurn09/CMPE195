@@ -25,3 +25,5 @@ while True:
     fcntl.flock(f, fcntl.LOCK_UN)
     
 	f.close()
+##Reference
+#https://www.youtube.com/watch?v=u6kuHMY5pHM
