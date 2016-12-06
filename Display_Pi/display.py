@@ -3,6 +3,7 @@
 #Uptime Resources
 #http://thesmithfam.org/blog/2005/11/19/python-uptime-script/
 #written by Goonjan Parkhe
+#A clock API for pygame was used and referred to in order to bring it up on our display screen the link from where the code was obtained from is as follows: https://www.raspberrypi.org/forums/viewtopic.php?f=41&t=51807&hilit=%2bclock#p415267
 
 import pygame
 from time import strftime
@@ -33,8 +34,8 @@ def uptime():
 
     total_seconds = float(contents[0])
 
-# Helper vars:
-MINUTE  = 60
+    # Helper vars:
+    MINUTE  = 60
     HOUR    = MINUTE * 60
     DAY     = HOUR * 24
     
@@ -50,8 +51,8 @@ MINUTE  = 60
         string += str(days) + " " + (days == 1 and "day" or "days" ) + ", "
     if len(string) > 0 or hours > 0:
         string += str(hours) + " " + (hours == 1 and "hr" or "hrs" ) + ", "
-if len(string) > 0 or minutes > 0:
-    string += str(minutes) + " " + (minutes == 1 and "min" or "mins" ) + ", "
+    if len(string) > 0 or minutes > 0:
+        string += str(minutes) + " " + (minutes == 1 and "min" or "mins" ) + ", "
         string += str(seconds) + " " + (seconds == 1 and "s" or "s" )
     
     return string;
