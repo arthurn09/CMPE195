@@ -10,7 +10,6 @@ import pprint
 from time import sleep
 import datetime
 
-#cap = cv2.VideoCapture(0)
 
 alpr = Alpr("us","/home/pi/opencv-3.0.0/build/bin/openalpr.conf.defaults","/home/pi/opencv-3.0.0/build/bin/runtime_data")
 
@@ -30,7 +29,7 @@ else:
     heightArray = [1 for h in range(4)]
     j = 0
     count = 0
-    while count < 20:
+    while count < 5:
         count = count + 1
         
         stream = io.BytesIO();
@@ -46,31 +45,31 @@ else:
             video_writer.write(image)
             cv2.imshow('Video', image)
 
-for plate in results['results']:
-    cv2.putText(frame, "Plate#: " + plate['plate'], (0,22), cv2.FONT_HERSHEY_SIMPLEX, 1,(255,255,0), 2)
-        cv2.putText(frame, "Tailgating!!!", (0,100), cv2.FONT_HERSHEY_SIMPLEX, 1,(0,0,255), 2)
+        for plate in results['results']:
+            cv2.putText(frame, "Plate#: " + plate['plate'], (0,22), cv2.FONT_HERSHEY_SIMPLEX, 1,(255,255,0), 2)
+            cv2.putText(frame, "Tailgating!!!", (0,100), cv2.FONT_HERSHEY_SIMPLEX, 1,(0,0,255), 2)
             coordinatesFile = open('tailgate.log', 'a')
-                coordinatesFile.write('Driver tailgating '),
-                    coordinatesFile.write('%s\n' % (datetime.datetime.now()))
-                        coordinatesFile.close()
+            coordinatesFile.write('Driver tailgate '),
+            coordinatesFile.write('%s\n' % (datetime.datetime.now()))
+            coordinatesFile.close()
                         
-                        for coordinates in results['results']:
-                for x in coordinates['coordinates']:
-                    j+=1
+        for coordinates in results['results']:
+            for x in coordinates['coordinates']:
+                j+=1
+                print("x: %i y: %i" % (x['x'], x['y']))
+                widthArray.insert(j,x['x'])
+                heightArray.insert(j, x['y'])
+                if j % 4 == 0:
+                    cv2.rectangle(image, (widthArray[j-3], heightArray[j-3]),(widthArray[j-3] + (widthArray[j-1] - widthArray[j]), heightArray[j-3] + (heightArray[j-1] - heightArray[j-2])), (0,255,0),2)
                     print("x: %i y: %i" % (x['x'], x['y']))
-                    widthArray.insert(j,x['x'])
-                    heightArray.insert(j, x['y'])
-                    if j % 4 == 0:
-                        cv2.rectangle(image, (widthArray[j-3], heightArray[j-3]),(widthArray[j-3] + (widthArray[j-1] - widthArray[j]), heightArray[j-3] + (heightArray[j-1] - heightArray[j-2])), (0,255,0),2)
-                        print("x: %i y: %i" % (x['x'], x['y']))
     
         video_writer.write(image)
         cv2.imshow('Video', image)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
 
-##        count = count + 1
+      count = count + 1
 
-##cap.release()
+
 cv2.destroyAllWindows()
 alpr.unload()

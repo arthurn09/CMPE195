@@ -36,8 +36,9 @@ def getIntersection(line1, line2,image):
 
 if x > 0 and y > 0:
     print "Intersects at x: %.2f y: %.2f" % (x, y)
-        intersectfile = open('laneChange.log', 'a')
-        intersectfile.write('lane change \n')
+        intersectfile = open('lanechange.log', 'a')
+        intersectfile.write('Driver lane change \n')
+        intersectfile.write('%s\n' % (datetime.datetime.now()))
         intersectfile.close()
         cv2.putText(image, "Changing lanes", (399,470),cv2.FONT_HERSHEY_SIMPLEX, 1, (255,0,255),2)
     

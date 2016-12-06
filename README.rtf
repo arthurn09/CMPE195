@@ -6,11 +6,6 @@
 
 \f0\fs24 \cf0 README\
 \
-#Compiling cpp programs\
-g++ -std=c++11  -pthread displaypi.cpp -o DisplayPi\
-g++ -std=c++11  -pthread camerapi.cpp -o CameraPi\
-\
-\
 #Camera Pi Dependencies\
 1. OpenCV installed\
 \
@@ -19,12 +14,21 @@ g++ -std=c++11  -pthread camerapi.cpp -o CameraPi\
 2. gpsd library python installed\
 \
 #Camera Pi Set Up\
-1. Connect the Raspberry Pi camera and USB camera to the Pi\
-2. Connect Ethernet to Pi\
+1. Connect the Raspberry Pi camera to Pi\
+2. Connect USB camera to the Pi\
+3. Connect Ethernet to Pi\
+4. Transfer Camera_Pi folder from code\
 \
 #Display Pi Set Up\
 1. Connect LCD to Pi\
 2. Connect GPS to Pi\
+3. Connect Ethernet to Pi\
+4. Transfer Display_Pi folder from code\
+\
+#Compiling cpp programs\
+g++ -std=c++11  -pthread displaypi.cpp -o DisplayPi\
+g++ -std=c++11  -pthread camerapi.cpp -o CameraPi\
 \
 #Running programs\
-}
+1. Run ./DisplayPi on Display Pi\
+2. Run ./CameraPi on Camera Pi}
