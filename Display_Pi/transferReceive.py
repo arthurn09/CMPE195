@@ -1,8 +1,11 @@
+#written by Eduardo Lemus
+##Reference
+#https://www.youtube.com/watch?v=u6kuHMY5pHM
 import socket
 import fcntl
 
 UDP_IP = "169.254.23.217"
-#UDP_IP = [(s.connect(('8.8.8.8', 53)), s.getsockname()[0], s.close()) for s in [socket.socket(socket.AF_INET, socket.SOCK_DGRAM)]][0][1]
+
 UDP_PORT = 5005
 
 print UDP_IP

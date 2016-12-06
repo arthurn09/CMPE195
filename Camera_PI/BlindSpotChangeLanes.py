@@ -1,3 +1,4 @@
+#written by Arthur Nguyen
 import datetime
 import re
 import time

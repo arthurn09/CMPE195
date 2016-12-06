@@ -1,6 +1,6 @@
 //============================================================================
 // Name        : CMPE.cpp
-// Author      :
+// Author      : Arthur Nguyen
 // Version     :
 // Copyright   : Your copyright notice
 // Description : Hello World in C++, Ansi-style

@@ -1,6 +1,8 @@
 #! /usr/bin/python
-# Written by Dan Mandle http://dan.mandle.me September 2012
-# License: GPL 2.0
+#written by Eduardo Lemus
+# Reference
+# http://www.danmandle.com/blog/getting-gpsd-to-work-with-python/
+
  
 import os
 from gps import *
@@ -10,7 +12,7 @@ import threading
 import fcntl
 
 gpsd = None #seting the global variable
- 
+
 os.system('clear') #clear the terminal (optional)
  
 class GpsPoller(threading.Thread):

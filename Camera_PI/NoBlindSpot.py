@@ -1,3 +1,4 @@
+#written by Arthur Nguyen
 import datetime
 
 data_log_file = open('send_data.txt','a')

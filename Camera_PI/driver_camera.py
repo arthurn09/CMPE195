@@ -2,7 +2,7 @@ import sys
 
 sys.path.append('/usr/local/lib/python2.7/site-packages')
 
-
+#written by Arthur Nguyen
 import cv2
 import numpy
 import time
