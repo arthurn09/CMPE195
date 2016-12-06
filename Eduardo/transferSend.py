@@ -5,7 +5,12 @@ import fcntl
 
 #UDP_IP = "10.0.0.228" 
 #UPD_IP = [(s.connect(('8.8.8.8', 53)), s.getsockname()[0], s.close()) for s in [socket.socket(socket.AF_INET, socket.SOCK_DGRAM)]][0][1]
+<<<<<<< Updated upstream
 UPD_IP = 169.254.23.217
+=======
+
+UDP_IP= "169.254.23.217"
+>>>>>>> Stashed changes
 UDP_PORT = 5005
 
 f = open('send_data.txt' , 'r')

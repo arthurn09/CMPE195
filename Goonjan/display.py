@@ -79,7 +79,7 @@ def showClock(clockScreen):
     pygame.init()
     pygame.font.init()
  
-   # Define some fonts to draw text with
+   #Chose fonts
     myfont = pygame.font.SysFont(None, 100)
     myfontsmall = pygame.font.SysFont(None, 50)
 
@@ -87,31 +87,35 @@ def showClock(clockScreen):
     mytime = strftime("%H:%M")
     mysecs = strftime("%S")
    
-    # Render the strings
+    # Final clock labels 
     clocklabel = myfont.render(mytime, 1, (255,255,255))
     secondlabel = myfontsmall.render(mysecs, 1, (255,255,255))
-   
+
+
+   #A clock API for pygame was used and referred to in order to bring it up on our display screen the link from where the code was obtained from is as follows: https://www.raspberrypi.org/forums/viewtopic.php?f=41&t=51807&hilit=%2bclock#p415267 
+
+
     # And position them on the screen
     textpos = clocklabel.get_rect() # Gets the rectangle of the hours and minutes...
     textpos.centerx = clockScreen.get_rect().centerx # ...and center horizontally...
     textpos.centery = clockScreen.get_rect().centery # ...and vertically
     secpos =  (textpos[0] + textpos[2] + 10, textpos[1] + textpos[3] - 55) # A bit of trial and error to position the seconds
    
-    # Draw the text onto our screen
+    # Draw the text
     clockScreen.blit(secondlabel, secpos)
     clockScreen.blit(clocklabel, textpos)
    
-    # Update the display (i.e. show the output of the above!)
+    # Update display
     pygame.display.flip()
 
 
-# Set up a boolean for a clean loop
+# Clear
 quitloop=False
 
-# Set up a variable to check when to refresh display
+# Refresh
 refresh = 0
 
-# Run our main loop
+# Loop for sconstant update
 while not quitloop:
     for event in pygame.event.get():
        
@@ -121,6 +125,6 @@ while not quitloop:
        
     if pygame.time.get_ticks() > refresh:
        
-        # Run the function to update display     
+        # Function call    
         	showClock(screen) 
 
