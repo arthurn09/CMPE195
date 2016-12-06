@@ -228,9 +228,8 @@ void *topSpeed(void *ptr)
             speedingCount++;
             if(speedingCount > 10)
             {
-                char speedbuffer[] = "Speeding";
-                write(fd3, speedbuffer, strlen(speedbuffer));
-                memset(&speedbuffer[0], 0, sizeof(speedbuffer));
+                int systemCmd;
+                systemCmd = system("python speeding.py");
                 speedingCount = 0;
             }
             
